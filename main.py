@@ -3,6 +3,7 @@ from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
+from shot import Shot
 
 
 def main() -> None:
@@ -19,6 +20,7 @@ def main() -> None:
     asteroids: pygame.sprite.Group = pygame.sprite.Group()
     updatable: pygame.sprite.Group = pygame.sprite.Group()
     drawable: pygame.sprite.Group = pygame.sprite.Group()
+    shots: pygame.sprite.Group = pygame.sprite.Group()
 
     # Matching groups and starting instances
     Asteroid.containers = (asteroids, updatable, drawable)
@@ -26,6 +28,7 @@ def main() -> None:
     asteroid_field = AsteroidField()
     Player.containers = (updatable, drawable)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    Shot.containers = (updatable, drawable, shots)
 
     while True:
         # Exit game if user uses exit button
@@ -42,10 +45,14 @@ def main() -> None:
             obj.draw(screen)
 
         # Ending the game if player collides with any of the asteroids
-        for ast in asteroids:
-            if ast.collision(player):
+        for asteroid in asteroids:
+            if asteroid.collision(player):
                 print("Game over!")
                 return
+            for shot in shots:
+                if shot.collision(asteroid):
+                    shot.kill()
+                    asteroid.kill()
 
         # Basically screen update
         pygame.display.flip()
