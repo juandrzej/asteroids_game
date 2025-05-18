@@ -6,10 +6,6 @@ from asteroidfield import AsteroidField
 
 
 def main() -> None:
-    print("Starting Asteroids!")
-    print(f"Screen width: {SCREEN_WIDTH}")
-    print(f"Screen height: {SCREEN_HEIGHT}")
-
     # Starting game, clock, dt, screen and display
     pygame.init()
     clock: pygame.time.Clock = pygame.time.Clock()
@@ -19,10 +15,12 @@ def main() -> None:
     )
     pygame.display.init()
 
-    # Creating asteroids, updatable and drawable groups, starting player instance
+    # Creating asteroids, updatable and drawable groups
     asteroids: pygame.sprite.Group = pygame.sprite.Group()
     updatable: pygame.sprite.Group = pygame.sprite.Group()
     drawable: pygame.sprite.Group = pygame.sprite.Group()
+
+    # Matching groups and starting instances
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = updatable
     asteroid_field = AsteroidField()
@@ -35,10 +33,15 @@ def main() -> None:
             if event.type == pygame.QUIT:
                 return
 
+        # Update objects on the screen each frame
         screen.fill("black")
         updatable.update(dt)
+
+        # Draw all objects on the screen each frame
         for obj in drawable:
             obj.draw(screen)
+
+        # Ending the game if player collides with any of the asteroids
         for ast in asteroids:
             if ast.collision(player):
                 print("Game over!")
@@ -47,6 +50,7 @@ def main() -> None:
         # Basically screen update
         pygame.display.flip()
 
+        # Limit FPS to 60
         dt = clock.tick(60) / 1000
 
 
