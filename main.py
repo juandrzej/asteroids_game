@@ -1,5 +1,6 @@
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from player import Player
 
 
 def main() -> None:
@@ -7,16 +8,24 @@ def main() -> None:
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
     pygame.init()
-    clock = pygame.time.Clock()
+    clock: pygame.time.Clock = pygame.time.Clock()
     dt: float = 0.0
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen: pygame.surface.Surface = pygame.display.set_mode(
+        (SCREEN_WIDTH, SCREEN_HEIGHT)
+    )
     pygame.display.init()
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
     while True:
+        # Exit game if user uses exit button
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+
         screen.fill("black")
+        player.draw(screen)
+
+        # Basically screen update
         pygame.display.flip()
 
         dt = clock.tick(60) / 1000
